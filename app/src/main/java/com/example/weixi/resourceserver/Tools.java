@@ -11,7 +11,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +35,18 @@ public class Tools {
         tableName="zy"+tableName;
         System.out.println("***********"+tableName);
         return tableName;
+    }
+
+    public static List<String> getListFromString(String s){
+        s=s.replace("[","");
+        s=s.replace("]","");
+        String[] strings = s.split(",");
+        List<String> list=new ArrayList<String>();
+        for (String str:strings
+             ) {
+            list.add(str.trim());
+        }
+        return list;
     }
 
         public static void writeDate(String date){

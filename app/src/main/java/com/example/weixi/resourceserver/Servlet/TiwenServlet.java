@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.weixi.resourceserver.MyContacts;
 import com.example.weixi.resourceserver.Tools;
 
 import java.io.IOException;
@@ -24,17 +25,17 @@ public class TiwenServlet extends BaseServlet {
         String rTiwen = tiwen.replace("[", "");
         rTiwen=rTiwen.replace("]","");
         SQLiteDatabase wenTiDB = Tools.getWenTiDB();
-        String tableName="tiwen";
-        wenTiDB.execSQL("CREATE TABLE if not exists "+tableName+"(_id INTEGER PRIMARY KEY AUTOINCREMENT,timu_id,isanswer,answertext)");
+        wenTiDB.execSQL("CREATE TABLE if not exists "+ MyContacts.WENTITABLENAME+"(_id INTEGER PRIMARY KEY AUTOINCREMENT,timu_id,timu_title,isanswer,answertext)");
         String[] strings = rTiwen.split(",");
         for (String s:strings
              ) {
             String timuId=s.trim();
-            Cursor cursor = wenTiDB.query(tableName, null, "timu_id = ?", new String[]{timuId}, null, null, null);
+            Cursor cursor = wenTiDB.query(MyContacts.WENTITABLENAME, null, "timu_id = ?", new String[]{timuId}, null, null, null);
             if (cursor.getCount()==0){
                 ContentValues values=new ContentValues();
                 values.put("timu_id",timuId);
-                wenTiDB.insert(tableName,null,values);
+                values.put("isanswer","false");
+                wenTiDB.insert(MyContacts.WENTITABLENAME,null,values);
             }
         }
     }

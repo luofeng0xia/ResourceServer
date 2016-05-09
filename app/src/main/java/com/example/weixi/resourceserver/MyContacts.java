@@ -8,4 +8,5 @@ import android.os.Environment;
 public class MyContacts {
     public static final String defValue="kong";
     public static final String path= Environment.getExternalStorageDirectory().getAbsolutePath()+"/webinfos/zuoye";
+    public static final String WENTITABLENAME="tiwen";
 }
