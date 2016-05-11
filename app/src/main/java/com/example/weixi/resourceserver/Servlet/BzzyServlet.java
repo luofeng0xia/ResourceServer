@@ -1,26 +1,13 @@
 package com.example.weixi.resourceserver.Servlet;
 
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
-import android.os.SystemClock;
 
 import com.example.weixi.resourceserver.MyContacts;
-import com.example.weixi.resourceserver.MySqliteHelper;
-import com.example.weixi.resourceserver.Servlet.BaseServlet;
 import com.example.weixi.resourceserver.Tools;
-import com.example.weixi.resourceserver.WebService;
-
-import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +21,7 @@ public class BzzyServlet extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setStatus(HttpServletResponse.SC_OK);
-        File filePath=new File(MyContacts.path);
+        File filePath=new File(MyContacts.zuoyePath);
         if (!filePath.exists()){
             if (filePath.mkdir()){
                 System.out.println("创建成功");
@@ -43,7 +30,7 @@ public class BzzyServlet extends BaseServlet {
             }
         }
         String fileName="zuoye.json";
-        File file=new File(MyContacts.path,fileName);
+        File file=new File(MyContacts.zuoyePath,fileName);
         String bzzy = req.getParameter("bzzy");
         FileOutputStream fos=new FileOutputStream(file);
         fos.write(bzzy.getBytes());

@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.SystemClock;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -102,7 +105,35 @@ public class Tools {
           }
       }
 
-        public static void returnFile(String path,HttpServletResponse resp){
+    /**
+     * 把输入流转化成文件
+     * @param is 输入流
+     * @param file 文件
+     * @throws Exception
+     */
+    public static void inputStream2File(InputStream is, File file)
+            throws Exception
+    {
+        InputStream inputSteam = is;
+        BufferedInputStream fis = new BufferedInputStream(inputSteam);
+        FileOutputStream fos = new FileOutputStream(file);
+        int f;
+        while ((f = fis.read()) != -1)
+        {
+            fos.write(f);
+        }
+        fos.flush();
+        fos.close();
+        fis.close();
+        inputSteam.close();
+    }
+
+    /**
+     * 返回一个文件给客户端
+     * @param path 文件路径
+     * @param resp 响应
+     */
+    public static void returnFile(String path,HttpServletResponse resp){
             File file = new File(path);
             System.out.println("*************"+path);
             long length = file.length();
@@ -116,9 +147,9 @@ public class Tools {
                 while ((count = stream.read(buffer)) != -1) {
                     SystemClock.sleep(20);
                     out.write(buffer, 0, count);
-                    out.flush();
                 }
                 stream.close();
+                out.flush();
                 out.close();
             } catch (IOException e) {
                 e.printStackTrace();
