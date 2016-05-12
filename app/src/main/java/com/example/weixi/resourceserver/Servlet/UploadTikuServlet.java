@@ -1,5 +1,7 @@
 package com.example.weixi.resourceserver.Servlet;
 
+import android.content.SharedPreferences;
+
 import com.example.weixi.resourceserver.MyContacts;
 import com.example.weixi.resourceserver.Tools;
 
@@ -38,8 +40,11 @@ public class UploadTikuServlet extends BaseServlet {
             for (FileItem item : list) {
                 String name = item.getFieldName();
                 InputStream is = item.getInputStream();
-                if (name.contains("tiku")) {
-                    String fileName = item.getName();
+                if (name.equals("version")){
+                    String version = Tools.inputStream2String(is);
+                    Tools.getSP("tiku").edit().putString("version",version).commit();
+                }else if (name.equals("tiku")) {
+                    String fileName = "lasttiku";
                     File file = new File(dir,fileName);
                     try {
                         Tools.inputStream2File(is, file);

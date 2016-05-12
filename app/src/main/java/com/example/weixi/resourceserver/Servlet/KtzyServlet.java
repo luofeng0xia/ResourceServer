@@ -17,7 +17,7 @@ public class KtzyServlet extends BaseServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setStatus(HttpServletResponse.SC_OK);
         String date = req.getParameter("date");
-        String zuoyeDate=Tools.getSPDate();
+        String zuoyeDate=Tools.getZuoyeDate();
         if (zuoyeDate!=null){
             if (date.equals(zuoyeDate)){
                 System.out.println("已经是最新的作业");

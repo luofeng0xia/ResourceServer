@@ -6,19 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.SystemClock;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -53,7 +49,7 @@ public class Tools {
     }
 
         public static void writeDate(String date){
-            SharedPreferences sp=getSP();
+            SharedPreferences sp=getSP("zuoyeSP");
             if (sp!=null){
                 sp.edit().putString("zydate",date).apply();
             }
@@ -87,23 +83,35 @@ public class Tools {
         return mHelper.getWritableDatabase();
     }
 
-    public static SharedPreferences getSP(){
+    public static SharedPreferences getSP(String spName){
           Context mContext=WebService.getmContext();
           if (mContext!=null){
-              return mContext.getSharedPreferences("zuoyeSP", Context.MODE_PRIVATE);
+              return mContext.getSharedPreferences(spName, Context.MODE_PRIVATE);
           }else {
               return null;
           }
       }
 
-      public static String getSPDate(){
-          if (getSP()!=null){
-              return getSP().getString("zydate",MyContacts.defValue);
+      public static String getZuoyeDate(){
+          if (getSP("zuoyeSP")!=null){
+              return getSP("zuoyeSP").getString("zydate",MyContacts.defValue);
           }else{
 //              System.out.println("sp里面无法取到这个数");
               return null;
           }
       }
+
+    // 流转化成字符串
+    public static String inputStream2String(InputStream is) throws IOException
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int i = -1;
+        while ((i = is.read()) != -1)
+        {
+            baos.write(i);
+        }
+        return baos.toString();
+    }
 
     /**
      * 把输入流转化成文件
@@ -121,8 +129,8 @@ public class Tools {
         while ((f = fis.read()) != -1)
         {
             fos.write(f);
+            fos.flush();
         }
-        fos.flush();
         fos.close();
         fis.close();
         inputSteam.close();
@@ -145,11 +153,11 @@ public class Tools {
                 int count = -1;
                 byte[] buffer = new byte[1024];
                 while ((count = stream.read(buffer)) != -1) {
-                    SystemClock.sleep(20);
                     out.write(buffer, 0, count);
+                    SystemClock.sleep(100);
+                    out.flush();
                 }
                 stream.close();
-                out.flush();
                 out.close();
             } catch (IOException e) {
                 e.printStackTrace();
