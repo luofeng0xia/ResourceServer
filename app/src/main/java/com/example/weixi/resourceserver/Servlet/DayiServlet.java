@@ -55,29 +55,33 @@ public class DayiServlet extends BaseServlet{
             case "getanswer":
                 String timuStr = req.getParameter("timulist");
                 ArrayList<String> reqList= (ArrayList<String>) Tools.getListFromString(timuStr);
-                Cursor answerCursor = db.query(MyContacts.WENTITABLENAME, new String[]{"timu_id","timu_title", "answertext"},
-                       "isanswer= ?" ,new String[]{"true"}, null, null, null);
-                JSONArray answers=new JSONArray();
-                while (answerCursor.moveToNext()){
-                    String answerTimuId=answerCursor.getString(0);
-                    if (reqList.contains(answerTimuId)){
-                        JSONObject answer=new JSONObject();
-                        String answerTimuTitle = answerCursor.getString(1);
-                        String answerTimuText=answerCursor.getString(2);
-                        try {
-                            answer.put("timuId",answerTimuId);
-                            answer.put("timuTitle",answerTimuTitle);
-                            answer.put("answerText",answerTimuText);
-                            answers.put(answer);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                String answerStr="";
+                if (Tools.tabIsExist(db,MyContacts.WENTITABLENAME)){
+                    Cursor answerCursor = db.query(MyContacts.WENTITABLENAME, new String[]{"timu_id","timu_title", "answertext"},
+                            "isanswer= ?" ,new String[]{"true"}, null, null, null);
+                    JSONArray answers=new JSONArray();
+                    while (answerCursor.moveToNext()){
+                        String answerTimuId=answerCursor.getString(0);
+                        if (reqList.contains(answerTimuId)){
+                            JSONObject answer=new JSONObject();
+                            String answerTimuTitle = answerCursor.getString(1);
+                            String answerTimuText=answerCursor.getString(2);
+                            try {
+                                answer.put("timuId",answerTimuId);
+                                answer.put("timuTitle",answerTimuTitle);
+                                answer.put("answerText",answerTimuText);
+                                answers.put(answer);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
+                    answerCursor.close();
+                    answerStr=answers.toString();
                 }
-//                System.out.println(answers);
-                answerCursor.close();
+
                 OutputStream os=resp.getOutputStream();
-                os.write(answers.toString().getBytes());
+                os.write(answerStr.getBytes());
                 os.flush();
                 os.close();
                 break;

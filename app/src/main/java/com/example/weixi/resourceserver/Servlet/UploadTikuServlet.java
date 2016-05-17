@@ -1,9 +1,8 @@
 package com.example.weixi.resourceserver.Servlet;
 
-import android.content.SharedPreferences;
-
 import com.example.weixi.resourceserver.MyContacts;
 import com.example.weixi.resourceserver.Tools;
+import com.example.weixi.resourceserver.WebService;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -56,6 +55,13 @@ public class UploadTikuServlet extends BaseServlet {
         } catch (FileUploadException e) {
             e.printStackTrace();
         }
-
+        //删除跟题库相关的文件
+        //1 zuoye.json
+        File zuoyeFile=new File(MyContacts.zuoyePath,"zuoye.json");
+        if (zuoyeFile.exists()){
+            zuoyeFile.delete();
+        }
+        //2 wenti数据库
+        WebService.getmContext().deleteDatabase("wenti.db");
     }
 }

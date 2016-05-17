@@ -2,6 +2,7 @@ package com.example.weixi.resourceserver;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.SystemClock;
 
@@ -164,4 +165,34 @@ public class Tools {
             }
 
         }
+
+    /**
+     * 判断某张表是否存在
+     * @param tabName 表名
+     * @return
+     */
+    public static boolean tabIsExist(SQLiteDatabase db,String tabName){
+        boolean result = false;
+        if(tabName == null){
+            return false;
+        }
+        SQLiteDatabase mDB = null;
+        Cursor cursor = null;
+        try {
+            mDB = db;
+            String sql = "select count(*) as c from sqlite_master where type ='table' and name ='"+tabName.trim()+"' ";
+            cursor = mDB.rawQuery(sql, null);
+            if(cursor.moveToNext()){
+                int count = cursor.getInt(0);
+                if(count>0){
+                    result = true;
+                }
+            }
+            cursor.close();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return result;
+    }
+
 }

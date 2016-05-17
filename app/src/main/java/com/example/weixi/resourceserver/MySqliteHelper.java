@@ -1,6 +1,7 @@
 package com.example.weixi.resourceserver;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -14,7 +15,7 @@ public class MySqliteHelper extends SQLiteOpenHelper {
     }
 
     public MySqliteHelper(String name){
-        super(WebService.getmContext(),name,null,1);
+        this(WebService.getmContext(),name,null,1);
     }
 
     @Override
