@@ -29,16 +29,20 @@ public class DayiServlet extends BaseServlet{
         resp.setStatus(HttpServletResponse.SC_OK);
         String dayitag = req.getParameter("dayitag");
         SQLiteDatabase db= Tools.getWenTiDB();
+        String responseStr="";
         switch (dayitag){
             case "question":
-                List<String> wentiList=new ArrayList<String>();
-                Cursor cursor = db.query(MyContacts.WENTITABLENAME, new String[]{"timu_id"},
-                        "isanswer = ?", new String[]{"false"}, null, null, null);
-                while (cursor.moveToNext()){
-                    wentiList.add(cursor.getString(0));
+                if (Tools.tabIsExist(db,MyContacts.WENTITABLENAME)) {
+                    List<String> wentiList = new ArrayList<String>();
+                    Cursor cursor = db.query(MyContacts.WENTITABLENAME, new String[]{"timu_id"},
+                            "isanswer = ?", new String[]{"false"}, null, null, null);
+                    while (cursor.moveToNext()) {
+                        wentiList.add(cursor.getString(0));
+                    }
+                    responseStr=wentiList.toString();
                 }
                 OutputStream out=resp.getOutputStream();
-                out.write(wentiList.toString().getBytes());
+                out.write(responseStr.getBytes());
                 out.flush();
                 out.close();
                 break;
@@ -55,7 +59,7 @@ public class DayiServlet extends BaseServlet{
             case "getanswer":
                 String timuStr = req.getParameter("timulist");
                 ArrayList<String> reqList= (ArrayList<String>) Tools.getListFromString(timuStr);
-                String answerStr="";
+
                 if (Tools.tabIsExist(db,MyContacts.WENTITABLENAME)){
                     Cursor answerCursor = db.query(MyContacts.WENTITABLENAME, new String[]{"timu_id","timu_title", "answertext"},
                             "isanswer= ?" ,new String[]{"true"}, null, null, null);
@@ -77,11 +81,11 @@ public class DayiServlet extends BaseServlet{
                         }
                     }
                     answerCursor.close();
-                    answerStr=answers.toString();
+                    responseStr=answers.toString();
                 }
 
                 OutputStream os=resp.getOutputStream();
-                os.write(answerStr.getBytes());
+                os.write(responseStr.getBytes());
                 os.flush();
                 os.close();
                 break;
