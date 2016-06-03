@@ -4,9 +4,11 @@
 ## Run Environment
 Min SDK verison 21
 
+Compile Sdk Version 23
+
 Android Studio version 2.1 final
 
-Gradle version 2.1.0
+Gradle version 2.10
 
 ##项目部署
 1. 把[c.zip](https://github.com/luofeng0xia/SomeResource/blob/master/md-c/dist/c.zip)文件存到手机的/sdcard/webinfos/c/md-c/dist目录下。
